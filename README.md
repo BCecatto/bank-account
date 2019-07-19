@@ -1,22 +1,19 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
+This is a API with JWT authentication and do a account transfer and verification.
+  
 * Ruby version
+  2.6.2
 
-* System dependencies
+* bundler version
+  1.17.2
 
-* Configuration
-
-* Database creation
-
-* Database initialization
+* Project setup
+  bin/setup
 
 * How to run the test suite
-
+  rspec spec
+  
 * Services (job queues, cache servers, search engines, etc.)
 
 * Deployment instructions
