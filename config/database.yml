@@ -1,0 +1,25 @@
+default: &default
+  adapter: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_ADAPTER') %>
+  username: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_USER') %>
+  database: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_NAME') %>
+  pool: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_POOL') %>
+  timeout: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_TIMEOUT') %>
+  host: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_HOST') %>
+  password: <%= ENV['BANK_ACCOUNT_DATABASE_PASS'] || Rails.application.secrets.database_pass %>
+  template: template0
+  encoding: utf8
+
+development:
+  <<: *default
+  database: <%= "#{ENV.fetch('BANK_ACCOUNT_DATABASE_NAME')}_development" %>
+
+test: &test
+  <<: *default
+  database: <%= "#{ENV.fetch('BANK_ACCOUNT_DATABASE_NAME')}_test" %>
+
+staging:
+  <<: *default
+  database: <%= "#{ENV.fetch('BANK_ACCOUNT_DATABASE_NAME')}_staging" %>
+
+production:
+  <<: *default
