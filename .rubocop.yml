@@ -7,5 +7,11 @@ AllCops:
     - 'spec/rails_helper.rb'
     - bin/**
     - Rakefile
+Metrics/BlockLength:
+  Enabled: true
+  CountComments: false
+  Exclude:
+    - 'spec/**/*.rb'
+    - 'config/routes.rb'
 Documentation:
   Enabled: false
