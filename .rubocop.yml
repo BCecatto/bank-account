@@ -13,5 +13,9 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
     - 'config/routes.rb'
+Metrics/LineLength:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*.rb'
 Documentation:
   Enabled: false

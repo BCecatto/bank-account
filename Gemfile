@@ -21,6 +21,7 @@ group :development, :test do
   gem 'rspec-expectations'
   gem 'rspec-rails'
   gem 'rubocop'
+  gem 'shoulda-matchers'
 end
 
 group :development do

@@ -13,8 +13,8 @@ class Event < ApplicationRecord
       create!(
         account_id: account.id,
         operation: 'withdrawal',
-        value: amount, 
-        balance: account.events.last.balance - amount
+        value: amount,
+        balance: account.events.last.balance - amount.to_f
       )
     end
   end
@@ -25,8 +25,8 @@ class Event < ApplicationRecord
       create!(
         account_id: account.id,
         operation: 'deposit',
-        value: amount, 
-        balance: account.events.last.balance + amount
+        value: amount,
+        balance: account.events.last.balance + amount.to_f
       )
     end
   end
