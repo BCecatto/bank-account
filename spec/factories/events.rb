@@ -3,8 +3,8 @@
 FactoryBot.define do
   factory :event do
     account
-    operation { 'withdrawal' }
-    value { 1.5 }
-    balance { 1.5 }
+    operation { 'deposit' }
+    value { 100.0 }
+    balance { 100.0 }
   end
 end
