@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :account do
     user
-    balance { 100.3 }
+    account_number { FFaker::PhoneNumber.short_phone_number }
+    bank_number { FFaker::PhoneNumber.short_phone_number }
   end
 end
