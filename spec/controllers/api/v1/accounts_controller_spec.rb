@@ -42,7 +42,7 @@ describe Api::V1::AccountsController, type: :controller do
         get :balance, params: { id: invalid_id }
 
         expect(response).to have_http_status(:not_found)
-        expect(response.body).to eq I18n.t('message.api.account.not_found')
+        expect(response.body).to eq I18n.t('message.api.account.not_found').to_json
       end
     end
   end

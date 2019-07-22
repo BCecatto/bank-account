@@ -1,0 +1,18 @@
+version: '2'
+services:
+  db:
+    image: postgres:9.6
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+  web:
+    build: .
+    command: bin/rails server --port 3000 --binding 0.0.0.0
+    ports:
+      - "3000:3000"
+    links:
+      - db
+    volumes:
+      - .:/myapp
+    environment:
+      - BANK_ACCOUNT_DATABASE_HOST=db
+      - BANK_ACCOUNT_DATABASE_PASS=postgres    

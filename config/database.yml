@@ -1,10 +1,10 @@
 default: &default
-  adapter: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_ADAPTER') %>
-  username: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_USER') %>
+  adapter: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_ADAPTER', 'postgresql') %>
+  username: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_USER', 'postgres') %>
   database: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_NAME') %>
-  pool: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_POOL') %>
+  pool: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_POOL', '5') %>
   timeout: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_TIMEOUT') %>
-  host: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_HOST') %>
+  host: <%= ENV.fetch('BANK_ACCOUNT_DATABASE_HOST', 'db') %>
   password: <%= ENV['BANK_ACCOUNT_DATABASE_PASS'] || Rails.application.secrets.database_pass %>
   template: template0
   encoding: utf8

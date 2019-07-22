@@ -25,7 +25,7 @@ describe TransferService do
         source_account = source_account_initial_event.account
         destination_account_initial_event = FactoryBot.create(:event, balance: 100.0)
         destination_account = destination_account_initial_event.account
-        
+
         TransferService.execute(
           source_account_id: source_account.id,
           destination_account_id: destination_account.id,
@@ -43,7 +43,7 @@ describe TransferService do
         source_account = source_account_initial_event.account
         destination_account_initial_event = FactoryBot.create(:event, balance: 100.0)
         destination_account = destination_account_initial_event.account
-        
+
         response = TransferService.execute(
           source_account_id: source_account.id,
           destination_account_id: destination_account.id,
@@ -56,7 +56,7 @@ describe TransferService do
       it 'destination_account is nil' do
         source_account_initial_event = FactoryBot.create(:event, balance: 100.0)
         source_account = source_account_initial_event.account
-        
+
         response = TransferService.execute(
           source_account_id: source_account.id,
           destination_account_id: nil,

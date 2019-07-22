@@ -5,9 +5,15 @@ System to manage a bank account with JWT authentication.
 * Ruby version
   `2.6.2`
 
+* Rails
+  `5.2`
+
 * bundler version
   `1.17.2`
 
+* PostgreSQL
+  `9.6`
+  
 ## Project setup
   `bin/setup`
 
@@ -18,18 +24,21 @@ System to manage a bank account with JWT authentication.
   `rubocop`
 
 ## Docker
-  `pending`
+  `docker-compose build`
+  `docker-compose run web bin/setup`
+  `docker-compose up`
 
 ## Improvements
   - If I have a valid session, I can realize transactions and see balance of any account, the correctly way is get current_user only
   - Get better errors
   - Utilize sidekiq to queue request of transactions.
 
-## API routes
+## Seeds
   The seed created for you this two logins with balance of 100.0:
 
   `teste1@hotmail.com, password: 321321` | `teste2@hotmail.com, password: 321321`
 
+## API routes
 ### /api/v1/users/create
 ```
 this route create a new user with account and trigger the first event in your account.
@@ -93,7 +102,7 @@ curl --location --request GET "localhost:3000/api/v1/balance?id=1" \
 ```
 
 ## Architecture
-  To save the history of transaction of a user was created table event, this table have a column to save value of balance of account, this way I can guarantee idepodent of all, and dont need to sum all events to get the balance, I can do this easily looking to your last event of account, and if some problemn happen can verify the value run a query to sum all events. When user is created trigger a creation of a new account and the first event of deposit of him account, and I prefer this way to avoid use callback in model, so because of it I create two function one name withdrawal and other deposit and I trigger it in a service, I utilize transaction to avoid some error of one operation happen and other not. Follow the documentation I put the option to utilize to send source_account_id in params, but because of token JWT I can get current_user in any controller.
+To save the history of transaction of a user was created event table, this table has a column to save value of balance of account, this way I can guarantee idempotency in system, and do not need to sum all events to get the balance, I do this easily looking at your last event of account, and if some problem happens, verify the value running the query all sum events. When user is created trigger a creation of a new account and the first event of deposit of him account, and I prefer this way to avoid use callback in model, so because of it I create two function one named withdrawal and other deposit and I trigger it in a service, I use transaction to avoid some error of one operation happen and other not. Follow the documentation I put the option to use to send source_account_id in params, but because of token JWT I can get current_user in any controller.
 
 ## Contributing
 

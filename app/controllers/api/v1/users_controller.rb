@@ -6,19 +6,25 @@ module Api
       before_action :authorize_request!
 
       def transfer
-        response = TransferService.execute(
-          source_account_id: source_account_id,
-          destination_account_id: user_params[:destination_account_id],
-          amount: user_params[:amount]
-        )
+        response = execute_transfer
         if response
-          render json: I18n.t('message.api.transfer.success'), status: :ok
+          render json: I18n.t('message.api.transfer.success')
+                           .to_json, status: :ok
         else
-          render json: I18n.t('message.api.transfer.failed'), status: :ok
+          render json: I18n.t('message.api.transfer.failed')
+                           .to_json, status: :ok
         end
       end
 
       private
+
+      def execute_transfer
+        TransferService.execute(
+          source_account_id: source_account_id,
+          destination_account_id: user_params[:destination_account_id],
+          amount: user_params[:amount]
+        )
+      end
 
       def source_account_id
         user_params[:source_account_id] || current_user.account.id
