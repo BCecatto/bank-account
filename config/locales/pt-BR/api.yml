@@ -4,3 +4,6 @@ pt-BR:
       transfer:
         failed: Transação cancelada.
         success: Transação finalizada com sucesso.
+      account:
+        not_found: Conta informada não existe.
+        balance: 'O seu saldo atual é: R$:%{value}'

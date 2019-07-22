@@ -5,8 +5,9 @@ module Api
     class ApplicationController < ActionController::API
       def authorize_request!
         decoded = JsonWebTokenService.decode(token)
+
         if different_user_agent?(decoded, request)
-          render json: { errors: 'Unauthorized' }, status: :unauthorized
+          return render json: { errors: 'Unauthorized' }, status: :unauthorized
         end
 
         @current_user = User.find_by(decoded[:id])

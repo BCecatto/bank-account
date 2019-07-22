@@ -1,23 +1,26 @@
 # frozen_string_literal: true
 
 module Api
-    module V1
-      class UsersController < Api::V1::ApplicationController
-        before_action :authorize_request!
-  
-        def balance
-          
-        end
-  
-        private
-  
-        def user_params
-          params.permit(
-            :name, :username, :email, :password, :password_confirmation,
-            :source_account_id, :destination_account_id, :amount
-          )
-        end
+  module V1
+    class AccountsController < Api::V1::ApplicationController
+      before_action :authorize_request!
+
+      def balance
+        account = Account.find(account_params[:id])
+        render json: I18n.t(
+          'message.api.account.balance',
+          value: account.events.last.balance
+        ), status: :ok
+      rescue ActiveRecord::RecordNotFound
+        render json: I18n.t('message.api.account.not_found'),
+               status: :not_found
+      end
+
+      private
+
+      def account_params
+        params.permit(:id)
       end
     end
   end
-  
+end

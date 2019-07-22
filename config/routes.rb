@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       post '/auth/login', to: 'authentications#login'
       post 'transfer', to: 'users#transfer'
+      get 'balance', to: 'accounts#balance'
     end
   end
 end

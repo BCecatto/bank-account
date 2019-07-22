@@ -18,12 +18,13 @@ class TransferService
 
   def execute
     return false if same_account?
+
     ActiveRecord::Base.transaction do
       Event.withdrawal(amount: amount, account_id: source_account.id)
       Event.deposit(amount: amount, account_id: destination_account.id)
     end
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound
-    return false
+    false
   end
 
   def source_account

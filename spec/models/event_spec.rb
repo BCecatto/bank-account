@@ -39,8 +39,7 @@ describe Event, type: :model do
 
         expect { Event.withdrawal(amount: 30.0, account_id: account.id) }
           .to raise_error(
-            ActiveRecord::RecordInvalid,
-            'Validation failed: Balance must be greater than or equal to 0'
+            ActiveRecord::RecordInvalid
           )
       end
     end
