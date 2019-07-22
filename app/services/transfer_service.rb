@@ -17,7 +17,7 @@ class TransferService
   end
 
   def execute
-    return false if same_account?
+    return false if same_account? || params_blank?
 
     ActiveRecord::Base.transaction do
       Event.withdrawal(amount: amount, account_id: source_account.id)
@@ -37,5 +37,9 @@ class TransferService
 
   def same_account?
     source_account_id == destination_account_id
+  end
+
+  def params_blank?
+    !destination_account_id.present? || !amount.present?
   end
 end

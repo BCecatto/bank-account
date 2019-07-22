@@ -20,7 +20,13 @@ System to manage a bank account with JWT authentication.
 ## Docker
   `pending`
 
+## Improvements
+  - Estou logado, faz transferencia entre qualquer conta
+  - setar amount como obrigatorio nos params
+  - Melhorar os erros da API
+  
 ## API routes
+
 ### /api/v1/users/create
 ```
 this route create a new user with account and trigger the first event in your account.
@@ -41,6 +47,10 @@ params:
   
 return:
   token: string
+
+CURL EXAMPLE:
+  curl --location --request POST "localhost:3000/api/v1/auth/login?email=afton_durgan@gaylord.biz&password=321321" \
+  --data ""
 ```
 
 ### /api/v1/transfer
@@ -57,6 +67,10 @@ header:
   ['Authorization'] = JWT
 return:
   Transação cancelada ou Transação finalizada com sucesso.
+
+CURL EXAMPLE:
+curl --location --request POST "localhost:3000/api/v1/transfer?destination_account_id=4&source_account_id=5&amount=5.0" \
+  --header "Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2FnZW50IjoiUG9zdG1hblJ1bnRpbWUvNy42LjAiLCJleHAiOjE1NjM4NTU5NTN9.HVB3HEY6N7WWXUHqOyV117XXr_07V0TFCGLg7d164YM"
 ```
 
 ### /api/v1/balance
@@ -69,6 +83,10 @@ header:
 
 return:
   'O seu saldo atual é: R$:%{value}'
+
+CURL EXAMPLE:
+curl --location --request GET "localhost:3000/api/v1/balance?id=4" \
+  --header "Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2FnZW50IjoiUG9zdG1hblJ1bnRpbWUvNy42LjAiLCJleHAiOjE1NjM4NTU5NTN9.HVB3HEY6N7WWXUHqOyV117XXr_07V0TFCGLg7d164YM"
 ```
 
 ## Architecture
