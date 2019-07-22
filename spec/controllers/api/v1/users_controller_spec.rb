@@ -3,79 +3,81 @@
 require 'rails_helper'
 
 describe Api::V1::UsersController, type: :controller do
-  context 'when have a valid JWT' do
-    it 'get current user' do
-      user = FactoryBot.create(:user)
-
-      token = JsonWebTokenService.encode(
-        user_id: user.id,
-        user_agent: 'Ubuntu'
-      )
-
-      request.headers['User-Agent'] = 'Ubuntu'
-      request.headers['Authorization'] = token
-
-      source_account_initial_event = FactoryBot.create(:event, balance: 100.0)
-      source_account = source_account_initial_event.account
-      destination_account_initial_event = FactoryBot.create(:event, balance: 100.0)
-      destination_account = destination_account_initial_event.account
-
-      post :transfer, params: {
-        source_account_id: source_account.id,
-        destination_account_id: destination_account.id,
-        amount: 50
-      }
-
-      expect(subject.current_user).to eq user
+  context 'Authentication' do
+    context 'when have a valid JWT' do
+      it 'get current user' do
+        user = FactoryBot.create(:user)
+  
+        token = JsonWebTokenService.encode(
+          user_id: user.id,
+          user_agent: 'Ubuntu'
+        )
+  
+        request.headers['User-Agent'] = 'Ubuntu'
+        request.headers['Authorization'] = token
+  
+        source_account_initial_event = FactoryBot.create(:event, balance: 100.0)
+        source_account = source_account_initial_event.account
+        destination_account_initial_event = FactoryBot.create(:event, balance: 100.0)
+        destination_account = destination_account_initial_event.account
+  
+        post :transfer, params: {
+          source_account_id: source_account.id,
+          destination_account_id: destination_account.id,
+          amount: 50
+        }
+  
+        expect(subject.current_user).to eq user
+      end
+    end
+  
+    context 'when have a different user agent' do
+      it 'status unauthorized' do
+        user = FactoryBot.create(:user)
+  
+        token = JsonWebTokenService.encode(
+          user_id: user.id,
+          user_agent: 'Ubuntu'
+        )
+  
+        request.headers['User-Agent'] = 'Debian'
+        request.headers['Authorization'] = token
+  
+        post :transfer, params: {
+          source_account_id: 123,
+          destination_account_id: 321,
+          amount: 50
+        }
+  
+        expect(response).to have_http_status(:unauthorized)
+        expect(subject.current_user).to eq nil
+      end
+    end
+  
+    context 'when dont have a valid JWT' do
+      it 'status unauthorized' do
+        user = FactoryBot.create(:user)
+  
+        token = JsonWebTokenService.encode(
+          user_id: user.id,
+          user_agent: 'Ubuntu'
+        )
+  
+        request.headers['User-Agent'] = 'Debian'
+        request.headers['Authorization'] = token + 'concat_to_invalid'
+  
+        post :transfer, params: {
+          source_account_id: 123,
+          destination_account_id: 321,
+          amount: 50
+        }
+  
+        expect(response).to have_http_status(:unauthorized)
+        expect(subject.current_user).to eq nil
+      end
     end
   end
-
-  context 'when have a different user agent' do
-    it 'status unauthorized' do
-      user = FactoryBot.create(:user)
-
-      token = JsonWebTokenService.encode(
-        user_id: user.id,
-        user_agent: 'Ubuntu'
-      )
-
-      request.headers['User-Agent'] = 'Debian'
-      request.headers['Authorization'] = token
-
-      post :transfer, params: {
-        source_account_id: 123,
-        destination_account_id: 321,
-        amount: 50
-      }
-
-      expect(response).to have_http_status(:unauthorized)
-      expect(subject.current_user).to eq nil
-    end
-  end
-
-  context 'when dont have a valid JWT' do
-    it 'status unauthorized' do
-      user = FactoryBot.create(:user)
-
-      token = JsonWebTokenService.encode(
-        user_id: user.id,
-        user_agent: 'Ubuntu'
-      )
-
-      request.headers['User-Agent'] = 'Debian'
-      request.headers['Authorization'] = token + 'concat_to_invalid'
-
-      post :transfer, params: {
-        source_account_id: 123,
-        destination_account_id: 321,
-        amount: 50
-      }
-
-      expect(response).to have_http_status(:unauthorized)
-      expect(subject.current_user).to eq nil
-    end
-  end
-
+  
   context '#transfer' do
     context 'when source account' do
       context 'have enought money to transfer' do

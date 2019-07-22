@@ -6,7 +6,7 @@ module Api
       before_action :authorize_request!
 
       def balance
-        account = Account.find(account_params[:id])
+        account = Account.find(account_id)
         render json: I18n.t(
           'message.api.account.balance',
           value: account.events.last.balance
@@ -17,6 +17,10 @@ module Api
       end
 
       private
+
+      def account_id
+        account_params[:id] || current_user.id
+      end
 
       def account_params
         params.permit(:id)
