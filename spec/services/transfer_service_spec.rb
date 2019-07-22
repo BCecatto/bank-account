@@ -9,13 +9,13 @@ describe TransferService do
         source_account_initial_event = FactoryBot.create(:event, balance: 100.0)
         destination_account_initial_event = FactoryBot.create(:event, balance: 100.0)
 
-        expect do
-          TransferService.execute(
-            source_account_id: source_account_initial_event.account.id,
-            destination_account_id: destination_account_initial_event.account.id,
-            amount: 110.0
-          )
-        end .to raise_error(ActiveRecord::RecordInvalid)
+        response = TransferService.execute(
+          source_account_id: source_account_initial_event.account.id,
+          destination_account_id: destination_account_initial_event.account.id,
+          amount: 150.0
+        )
+
+        expect(response).to be_falsey
       end
     end
 

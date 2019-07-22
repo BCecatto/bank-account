@@ -1,0 +1,6 @@
+pt-BR:
+  message:
+    api:
+      transfer:
+        failed: Transação cancelada.
+        success: Transação finalizada com sucesso.

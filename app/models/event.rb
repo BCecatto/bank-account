@@ -8,26 +8,22 @@ class Event < ApplicationRecord
   validates :balance, numericality: { greater_than_or_equal_to: 0 }
 
   def self.withdrawal(amount:, account_id:)
-    ActiveRecord::Base.transaction do
-      account = Account.find(account_id)
-      create!(
-        account_id: account.id,
-        operation: 'withdrawal',
-        value: amount,
-        balance: account.events.last.balance - amount.to_f
-      )
-    end
+    create!(
+      account_id: account_id,
+      operation: 'withdrawal',
+      value: amount,
+      balance: Event.where(account_id: account_id)
+        .last.balance - amount.to_f
+    )
   end
 
   def self.deposit(amount:, account_id:)
-    ActiveRecord::Base.transaction do
-      account = Account.find(account_id)
-      create!(
-        account_id: account.id,
-        operation: 'deposit',
-        value: amount,
-        balance: account.events.last.balance + amount.to_f
-      )
-    end
+    create!(
+      account_id: account_id,
+      operation: 'deposit',
+      value: amount,
+      balance: Event.where(account_id: account_id)
+        .last.balance + amount.to_f
+    )
   end
 end
