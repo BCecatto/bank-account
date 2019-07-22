@@ -23,14 +23,23 @@ System to manage a bank account with JWT authentication.
 ## How to run quality of code verification
   `rubocop`
 
+## Start server
+  `rails s`
+
 ## Docker
-  `docker-compose build`
-  `docker-compose run web bin/setup`
-  `docker-compose up`
+  1. `docker-compose build`
+
+  2. `docker-compose run web bin/setup`
+
+  3. `docker-compose up`
 
 ## Improvements
-  - If I have a valid session, I can realize transactions and see balance of any account, the correctly way is get current_user only
-  - Get better errors
+  - If I have a valid session, I can realize transactions and see balance of any account, 
+  the correctly way is get current_user only in my opinion or insert a validation to soource_account_id
+  only can be logged user.
+
+  - response and errors in API can be better.
+
   - Utilize sidekiq to queue request of transactions.
 
 ## Seeds
@@ -41,13 +50,22 @@ System to manage a bank account with JWT authentication.
 ## API routes
 ### /api/v1/users/create
 ```
-this route create a new user with account and trigger the first event in your account.
+this route create a new user with account and trigger the first event in your account and you can send the inicial amount of your balance.
 
 params:
-
+{
+  name: 'Foo', username: 'Bar', email: 'foo@hotmail.com', password: '321321',
+  account: {
+    account_number: '321', bank_number: '321'
+  },
+  event: {
+    value: 100.0
+  }
+}
 return:
-
+  Criado com sucesso ou Registro inválido
 ```
+
 ### /api/v1/auth/login
 ```
 this route create a JWT token to user with expiration time, to do this just have a user created in the route below and send the follow informations:

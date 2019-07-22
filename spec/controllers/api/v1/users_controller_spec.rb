@@ -143,4 +143,42 @@ describe Api::V1::UsersController, type: :controller do
       end
     end
   end
+
+  context '#create' do
+    context 'when params is' do
+      it 'valid create with success a new user with account' do
+        params = {
+          name: 'Foo', username: 'Bar', email: 'foo@hotmail.com', password: '321321',
+          account: {
+            account_number: '321', bank_number: '321'
+          },
+          event: {
+            value: 100.0
+          }
+        }.with_indifferent_access
+
+        post :create, params: params
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include(I18n.t('message.api.user.success'))
+      end
+
+      it 'invalid return error' do
+        params = {
+          name: 'Foo', username: 'Bar', email: nil, password: '321321',
+          account: {
+            account_number: '321', bank_number: '321'
+          },
+          event: {
+            value: 100.0
+          }
+        }.with_indifferent_access
+
+        post :create, params: params
+
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response.body).to include(I18n.t('activerecord.errors.messages.record_invalid'))
+      end
+    end
+  end
 end

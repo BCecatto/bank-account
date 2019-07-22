@@ -7,3 +7,5 @@ pt-BR:
       account:
         not_found: Conta informada não existe.
         balance: 'O seu saldo atual é: R$:%{value}'
+      user:
+        success: Criado com sucesso

@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(version: 2019_07_21_184703) do
   create_table "events", force: :cascade do |t|
     t.string "operation"
     t.float "value"
-    t.float "balance"
+    t.float "balance", default: 0.0
     t.bigint "account_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

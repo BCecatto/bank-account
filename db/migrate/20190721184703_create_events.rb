@@ -3,7 +3,7 @@ class CreateEvents < ActiveRecord::Migration[5.2]
     create_table :events do |t|
       t.string :operation
       t.float :value
-      t.float :balance
+      t.float :balance, default: 0
       t.references :account, foreign_key: true
 
       t.timestamps

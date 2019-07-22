@@ -23,7 +23,8 @@ class TransferService
       Event.withdrawal(amount: amount, account_id: source_account.id)
       Event.deposit(amount: amount, account_id: destination_account.id)
     end
-  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound
+  rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotFound => e
+    Rails.logger.error e.message
     false
   end
 
