@@ -65,6 +65,32 @@ describe TransferService do
 
         expect(response).to be_falsey
       end
+
+      it 'destination account not found' do
+        source_account_initial_event = FactoryBot.create(:event, balance: 100.0)
+        source_account = source_account_initial_event.account
+
+        response = TransferService.execute(
+          source_account_id: source_account.id,
+          destination_account_id: 100,
+          amount: 10.0
+        )
+
+        expect(response).to be_falsey
+      end
+
+      it 'source account not found' do
+        destination_account_initial_event = FactoryBot.create(:event, balance: 100.0)
+        destination_account = destination_account_initial_event.account
+
+        response = TransferService.execute(
+          source_account_id: 123,
+          destination_account_id: destination_account.id,
+          amount: 10.0
+        )
+
+        expect(response).to be_falsey
+      end
     end
   end
 end

@@ -2,6 +2,8 @@
 
 System to manage a bank account with JWT authentication.
   
+To save the history of transaction of a user was created event table, this table has a column to save value of balance of account, this way I can guarantee consistency in system, and do not need to sum all events to get the balance, I do this easily looking at your last event of account, and if some problem happens, verify the value running the query all sum events. When user is created trigger a creation of a new account and the first event of deposit of him account, I use transaction to avoid some error of one operation happen and other not. Follow the documentation I put the option to use to send source_account_id in params, but because of token JWT you can get current_user in any controller.
+
 * Ruby version
   `2.6.2`
 
@@ -15,6 +17,8 @@ System to manage a bank account with JWT authentication.
   `9.6`
   
 ## Project setup
+  Config database envs in .env file, this is necessary, and after it run:
+
   `bin/setup`
 
 ## How to run the test suite
@@ -32,15 +36,6 @@ System to manage a bank account with JWT authentication.
   2. `docker-compose run web bin/setup`
 
   3. `docker-compose up`
-
-## Improvements
-  - If I have a valid session, I can realize transactions and see balance of any account, 
-  the correctly way is get current_user only in my opinion or insert a validation to soource_account_id
-  only can be logged user.
-
-  - response and errors in API can be better.
-
-  - Utilize sidekiq to queue request of transactions.
 
 ## Seeds
   The seed created for you this two logins with balance of 100.0:
@@ -64,6 +59,9 @@ params:
 }
 return:
   Criado com sucesso ou Registro inválido
+
+CURL EXAMPLE:
+curl -X POST -k -v -H 'Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2FnZW50IjoiUG9zdG1hblJ1bnRpbWUvNy42LjAiLCJleHAiOjE1NjM4NTU5NTN9.HVB3HEY6N7WWXUHqOyV117XXr_07V0TFCGLg7d164YM' -H "Content-Type: application/json" http://localhost:3000/api/v1/users/create -d "{\"name\":\"Foo\",\"username\":\"Bar\",\"email\":\"foo@hotmail.com\",\"password\":\"321321\",\"account\":{\"account_number\":\"20321\",\"bank_number\":\"20321\"},\"event\":{\"value\":\"20100.0\"}}"
 ```
 
 ### /api/v1/auth/login
@@ -83,7 +81,7 @@ CURL EXAMPLE:
   --data ""
 ```
 
-### /api/v1/transfer
+### /api/v1/users/transfer
 ```
 this route is responsible to transfer a value from one account to another, source_account param is optional because of current_user.
 
@@ -99,11 +97,11 @@ return:
   Transação cancelada ou Transação finalizada com sucesso.
 
 CURL EXAMPLE:
-curl --location --request POST "localhost:3000/api/v1/transfer?destination_account_id=2&source_account_id=1&amount=5.0" \
+curl --location --request POST "localhost:3000/api/v1/users/transfer?destination_account_id=2&source_account_id=1&amount=5.0" \
   --header "Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2FnZW50IjoiUG9zdG1hblJ1bnRpbWUvNy42LjAiLCJleHAiOjE1NjM4NTU5NTN9.HVB3HEY6N7WWXUHqOyV117XXr_07V0TFCGLg7d164YM"
 ```
 
-### /api/v1/balance
+### /api/v1/accounts/balance
 ```
 this route is responsible to get balance of some account, id is optional because of current_user.
 params:
@@ -115,12 +113,18 @@ return:
   'O seu saldo atual é: R$:%{value}'
 
 CURL EXAMPLE:
-curl --location --request GET "localhost:3000/api/v1/balance?id=1" \
+curl --location --request GET "localhost:3000/api/v1/accouts/balance?id=1" \
   --header "Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX2FnZW50IjoiUG9zdG1hblJ1bnRpbWUvNy42LjAiLCJleHAiOjE1NjM4NTU5NTN9.HVB3HEY6N7WWXUHqOyV117XXr_07V0TFCGLg7d164YM"
 ```
 
-## Architecture
-To save the history of transaction of a user was created event table, this table has a column to save value of balance of account, this way I can guarantee idempotency in system, and do not need to sum all events to get the balance, I do this easily looking at your last event of account, and if some problem happens, verify the value running the query all sum events. When user is created trigger a creation of a new account and the first event of deposit of him account, and I prefer this way to avoid use callback in model, so because of it I create two function one named withdrawal and other deposit and I trigger it in a service, I use transaction to avoid some error of one operation happen and other not. Follow the documentation I put the option to use to send source_account_id in params, but because of token JWT I can get current_user in any controller.
+## Improvements
+  - If I have a valid session, I can realize transactions and see balance of any account, 
+  the correctly way is get current_user only in my opinion or insert a validation to source_account_id
+  only can be logged user.
+
+  - response and errors in API can be better.
+
+  - Utilize sidekiq to queue request of transactions.
 
 ## Contributing
 

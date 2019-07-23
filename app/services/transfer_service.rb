@@ -41,6 +41,6 @@ class TransferService
   end
 
   def params_blank?
-    !destination_account_id.present? || !amount.present?
+    destination_account_id.blank? || amount.blank?
   end
 end

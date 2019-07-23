@@ -3,6 +3,13 @@
 require 'rails_helper'
 
 describe Api::V1::AccountsController, type: :controller do
+  def balance_checker(account_id:)
+    events = Event.where(account_id: account_id)
+    values_event_deposit = events.select { |e| e.operation == 'deposit' }.pluck(:value)
+    values_event_withdrawal = events.select { |e| e.operation == 'withdrawal' }.pluck(:value)
+    values_event_deposit.inject(:+) - values_event_withdrawal.inject(:+)
+  end
+
   context '#balance' do
     context 'get balance of account' do
       it 'with success' do
@@ -10,24 +17,23 @@ describe Api::V1::AccountsController, type: :controller do
           .to receive(:authorize_request!)
           .and_return(true)
 
-        amount = 100.0
+        deposit_value = 100.0
+        withdrawal_value = 34.0
         number_of_deposits = 10
-        number_of_withdrawal = 2
+        number_of_withdrawal = 5
         account = FactoryBot.create(:event).account
 
         number_of_deposits.times do
-          Event.deposit(amount: amount, account_id: account.id)
+          Event.deposit(amount: deposit_value, account_id: account.id)
         end
 
         number_of_withdrawal.times do
-          Event.withdrawal(amount: amount, account_id: account.id)
+          Event.withdrawal(amount: withdrawal_value, account_id: account.id)
         end
 
         get :balance, params: { id: account.id }
 
-        # first event in factory have 100 of balance by default
-        account_balance = ((amount * number_of_deposits + 100) - (number_of_withdrawal * amount)).to_s
-        expect(response.body).to include(account_balance)
+        expect(response.body).to include(balance_checker(account_id: account.id).to_s)
       end
     end
 

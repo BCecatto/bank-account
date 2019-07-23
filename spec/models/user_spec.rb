@@ -17,5 +17,7 @@ describe User, type: :model do
     it { should validate_uniqueness_of(:email) }
     it { should validate_presence_of(:username) }
     it { should validate_uniqueness_of(:username) }
+    it { should allow_value('bruno@hotmail.com').for(:email) }
+    it { should_not allow_value('foobar').for(:email) }
   end
 end
